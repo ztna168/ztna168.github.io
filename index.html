@@ -283,6 +283,15 @@
         .shake {
             animation: shake 0.5s ease-in-out;
         }
+  /* IP Display */
+
+        .visitor-info {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #4f46e5;
+        }
       .ip-display {
             background: #1e1b4b;
             color: white;
@@ -376,12 +385,14 @@
                     <p>啟用端點防毒軟體，定期掃描系統，確保在安全的沙盒環境中進行測試。</p>
 					 <p>請自行承擔病毒感染與擴散風險 - Test by Pippeng</p>
 
-		 <div class="ip-display">
-                <div class="ip-label">您的來源IP地址</div>
-                <div id="visitorIp" class="loading">正在檢測訪問者IP地址...</div>
-                <div id="apiStatus" class="api-status" style="display: none;"></div>
-                <div id="timestamp" class="timestamp" style="display: none;"></div>
-                </div>
+		  <div class="visitor-info">
+                  <div class="ip-display">
+                  <div class="ip-label">您的來源IP地址</div>
+                  <div id="visitorIp" class="loading">正在檢測訪問者IP地址...</div>
+                  <div id="apiStatus" class="api-status" style="display: none;"></div>
+                  <div id="timestamp" class="timestamp" style="display: none;"></div>
+		  </div>  
+                  </div>
 			
                 </div>
 
