@@ -1,4 +1,4 @@
-TYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
@@ -176,12 +176,16 @@ TYPE html>
 
         .nav a {
             display: block;
-            padding: 5px 10px;
+            padding: 8px 12px;
             color: #F58902;
             text-decoration: none;
             border-radius: 5px;
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 2px;
         }
 
         .nav a:hover {
@@ -189,6 +193,7 @@ TYPE html>
             color: white;
             transform: translateX(5px);
             border-left-color: #fff;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
 
         .content h1 {
@@ -228,6 +233,20 @@ TYPE html>
             padding: 20px;
             margin-top: auto;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        .ip-info {
+            color: #b8c5d6;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .ip-loading {
+            color: #667eea;
         }
 
         .logout-btn {
@@ -346,7 +365,9 @@ TYPE html>
                     
                     <h2>清除方法</h2>
                     <p>啟用端點防毒軟體，定期掃描系統，確保在安全的沙盒環境中進行測試。</p>
-					 <p>請自行承擔病毒感染與擴散風險 - Test by Pippeng</p>
+                    <p>請自行承擔病毒感染與擴散風險 - Test by Pippeng</p>
+					<br>
+					<p id="userIpInfo" class="ip-info ip-loading">正在檢測您的IP地址...</p>
                 </div>
             </div>
             
@@ -360,10 +381,34 @@ TYPE html>
         // 設定密碼
         const correctPassword = "pippeng!";
         
+        // 獲取使用者IP地址
+        async function getUserIP() {
+            const ipElement = document.getElementById('userIpInfo');
+            try {
+                // 使用免費的IP檢測API
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                
+                // 獲取更詳細的IP資訊
+                const detailResponse = await fetch(`https://ipapi.co/${data.ip}/json/`);
+                const detailData = await detailResponse.json();
+                
+                // 顯示IP和地理位置資訊
+                ipElement.innerHTML = `您的IP地址：${data.ip} | 位置：${detailData.city || '未知'}, ${detailData.country_name || '未知'}`;
+                ipElement.className = 'ip-info';
+            } catch (error) {
+                console.error('獲取IP失敗:', error);
+                ipElement.innerHTML = '您的IP地址：檢測失敗';
+                ipElement.className = 'ip-info';
+            }
+        }
+        
         // 頁面載入時檢查驗證狀態
         window.onload = function() {
             if (sessionStorage.getItem('authenticated') === 'true') {
                 showMainSite();
+                // 顯示主站後再獲取IP
+                setTimeout(getUserIP, 500);
             }
             
             // 支援 Enter 鍵提交
@@ -389,6 +434,8 @@ TYPE html>
                 // 密碼正確
                 sessionStorage.setItem('authenticated', 'true');
                 showMainSite();
+                // 顯示主站後獲取IP
+                setTimeout(getUserIP, 500);
             } else {
                 // 密碼錯誤
                 errorMessage.style.display = 'block';
