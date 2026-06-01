@@ -1,490 +1,181 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V-download-test - 網站訪問驗證</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>V-download-test</title>
+<!-- TemplateEndEditable -->
+<!-- TemplateBeginEditable name="head" -->
+<!-- TemplateEndEditable -->
+<style type="text/css">
+<!--
+body {
+	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+	background-color: #42413C;
+	margin: 0;
+	padding: 0;
+	color: #000;
+}
 
-        body {
-            font-family: 'Microsoft JhengHei', Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            min-height: 100vh;
-        }
+/* ~~ 元素/標籤選取器 ~~ */
+ul, ol, dl { /* 由於瀏覽器之間的差異，最佳作法是在清單中使用零寬度的欄位間隔及邊界。為了保持一致，您可以在這裡指定所要的量，或在清單包含的清單項目 (LI、DT、DD) 上指定所要的量。請記住，除非您寫入較為特定的選取器，否則在此執行的作業將重疊顯示到 .nav 清單。 */
+	padding: 0;
+	margin: 0;
+}
+h1, h2, h3, h4, h5, h6, p {
+	margin-top: 0;	 /* 移除上方邊界可以解決邊界可能從其包含的 Div 逸出的問題。剩餘的下方邊界可以保持 Div 不與接在後面的元素接觸。 */
+	padding-right: 15px;
+	padding-left: 15px; /* 將欄位間隔加入至 Div 內元素的兩側 (而不是 Div 本身)，即可不需執行任何方塊模型的計算作業。具有側邊欄位間隔的巢狀 Div 也可當做替代方法。 */
+}
+a img { /* 這個選取器會移除某些瀏覽器在影像由連結所圍繞時，影像周圍所顯示的預設藍色邊框 */
+	border: none;
+}
 
-        /* 密碼驗證頁面樣式 */
-        .password-page {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+/* ~~ 網站連結的樣式設定必須保持此順序，包括建立滑過 (Hover) 效果的選取器群組在內。~~ */
+a:link {
+	color: #42413C;
+	text-decoration: underline; /* 除非您要設定非常獨特的連結樣式，否則最好提供底線，以便快速看出 */
+}
+a:visited {
+	color: #6E6C64;
+	text-decoration: underline;
+}
+a:hover, a:active, a:focus { /* 這個選取器群組可以讓使用鍵盤導覽的使用者，也和使用滑鼠的使用者一樣擁有相同的滑過體驗。 */
+	text-decoration: none;
+}
 
-        .password-container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-            animation: fadeInUp 0.6s ease-out;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+/* ~~這個固定寬度的容器環繞著其他 Div~~ */
+.container {
+	width: 960px;
+	background-color: #FFF;
+	margin: 0 auto; /* 兩側的自動值與寬度結合後，版面便會置中對齊 */
+}
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+/* ~~ 頁首沒有指定的寬度，而會橫跨版面的整個寬度。頁首包含影像預留位置，必須由您自己的連結商標加以取代 ~~ */
+.header {
+	background-color: #ADB96E;
+}
 
-        .lock-icon {
-            font-size: 48px;
-            color: #667eea;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
+/* ~~ 這是版面的欄位。~~ 
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
+1) 欄位間隔只會置於 Div 的頂端或底部。這些 Div 內的元素在兩側會有欄位間隔，可讓您不需進行「方塊模型計算」。請記住，如果對 Div 本身加入任何側邊的欄位間隔或邊框，在計算「總」寬度時，就會將這些加入您定義的寬度。您也可以選擇移除 Div 中元素的欄位間隔，然後在其中放置沒有寬度的第二個 Div，並依設計所需放置欄位間隔。
 
-        .password-container h2 {
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 24px;
-            font-weight: 600;
-        }
+2) 尚未為這些欄位提供邊界，因為它們全都是浮動的。如果必須加入邊界，請避免將其放在浮動方向的一側 (例如將右邊界放在設定為向右浮動的 Div 上)。在許多時候，您都可以改用欄位間隔。對於必須違反此規則的 Div，您應該在 Div 的規則中加入 "display:inline" 宣告，以防止某些版本的 Internet Explorer 將邊界加倍。
 
-        .input-group {
-            margin-bottom: 20px;
-        }
+3) 因為可在文件中多次使用類別 (也可對單一的元素套用多個類別)，所以已為欄位指定類別名稱，而非 ID。例如，您可在必要時將兩個側邊列 Div 堆疊起來。如有需要，也可以將這些名稱輕鬆地變更為 ID (只要您在每份文件中只使用一次)。
 
-        .password-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
+4) 如果想要將導覽放在右方而非左方，只要將這些欄設定為往反方向浮動 (全部往右，而非全部往左)，它們就會以相反順序呈現。您不需要在 HTML 原始碼中移動 Div。
 
-        .password-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
+*/
+.sidebar1 {
+	float: left;
+	width: 180px;
+	background-color: #EADCAE;
+	padding-bottom: 10px;
+}
+.content {
 
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+	padding: 10px 0;
+	width: 780px;
+	float: left;
+}
 
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
+/* ~~ 這個群組選取器會在 .content 區域空間中提供清單 ~~ */
+.content ul, .content ol { 
+	padding: 0 15px 15px 40px; /* 這個欄位間隔反映出上方標題和段落規則中的右方間隔。當欄位間隔位於下方時，便可將清單中的其他元素間隔開來；當位於左方時，則可藉此建立縮排。這些動作均可依需要進行調整。 */
+}
 
-        .error-message {
-            color: #e74c3c;
-            margin-top: 15px;
-            font-size: 14px;
-            display: none;
-            font-weight: 500;
-        }
+/* ~~ 導覽清單樣式 (如果選擇使用 Spry 之類的預製飛出選單，則可移除) ~~ */
+ul.nav {
+	list-style: none; /* 這會移除清單標記 */
+	border-top: 1px solid #666; /* 這會建立連結的上方邊框，其他則都會使用下方邊框放置在 LI 上 */
+	margin-bottom: 15px; /* 這會在下方的內容上建立導覽間的間距 */
+}
+ul.nav li {
+	border-bottom: 1px solid #666; /* 這會建立按鈕分隔 */
+}
+ul.nav a, ul.nav a:visited { /* 將這些選取器放入群組，即可確保您的連結即使在受到點擊後仍保有按鈕外觀 */
+	padding: 5px 5px 5px 15px;
+	display: block; /* 這會為連結提供區塊屬性，使連結能填滿包含它的整個 LI，讓整個區域都能回應滑鼠點按動作。 */
+	width: 160px;  /*這個寬度使整個按鈕都可用於 IE6 的點按動作。如果不需要支援 IE6，就可將其移除。請從側邊列容器的寬度減去此連結的間距來計算適當的寬度。 */
+	text-decoration: none;
+	background-color: #C6D580;
+}
+ul.nav a:hover, ul.nav a:active, ul.nav a:focus { /* 這會同時變更滑鼠及鍵盤導覽器的背景及文字顏色 */
+	background-color: #ADB96E;
+	color: #FFF;
+}
 
-        /* 主網站樣式 */
-        .main-site {
-            display: none;
-            background: #1a1a2e;
-            min-height: 100vh;
-        }
+/* ~~ 頁尾 ~~ */
+.footer {
+	padding: 10px 0;
+	background-color: #CCC49F;
+	position: relative;/* 這會為 IE6 提供 hasLayout 以進行適當的清除動作 */
+	clear: both; /* 這個 clear 屬性可以強制 .container 辨識欄結束於何處以及包含欄的位置 */
+}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: #16213e;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
+/* ~~ 其他 float/clear 類別 ~~ */
+.fltrt {  /* 這個類別可用來讓元素在頁面中浮動，浮動的元素必須位於頁面上相鄰的元素之前。 */
+	float: right;
+	margin-left: 8px;
+}
+.fltlft { /* 這個類別可用來讓元素在頁面左方浮動，浮動的元素必須位於頁面上相鄰的元素之前。 */
+	float: left;
+	margin-right: 8px;
+}
+.clearfloat { /* 這個類別可放置在 <br /> 或空白的 Div 上，當做接在 #container 內最後一個浮動 Div 後方的最後一個元素 (如果從 #container 移除或取出 #footer) */
+	clear:both;
+	height:0;
+	font-size: 1px;
+	line-height: 0px;
+}
+-->
+</style></head>
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .header img {
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .main-wrapper {
-            display: flex;
-            flex: 1;
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .sidebar1 {
-            width: 300px;
-            background: #0f3460;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .content {
-            flex: 1;
-            padding: 20px;
-            background: #16213e;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav {
-            list-style: none;
-        }
-
-        .nav li {
-            margin-bottom: 10px;
-        }
-
-        .nav a {
-            display: block;
-            padding: 8px 12px;
-            color: #F58902;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
-            font-weight: 500;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-            background: rgba(255, 255, 255, 0.05);
-            margin-bottom: 2px;
-        }
-
-        .nav a:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            transform: translateX(5px);
-            border-left-color: #fff;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-
-        .content h1 {
-            color: #e0e6ed;
-            margin-bottom: 20px;
-            font-size: 28px;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
-        }
-
-        .content h2 {
-            color: #667eea;
-            margin: 30px 0 15px 0;
-            font-size: 22px;
-        }
-
-        .content p {
-            line-height: 1.6;
-            margin-bottom: 15px;
-            color: #b8c5d6;
-        }
-
-        .warning {
-            background: rgba(255, 243, 205, 0.1);
-            border: 1px solid rgba(255, 234, 167, 0.3);
-            color: #ffd32a;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            border-left: 4px solid #f39c12;
-        }
-
-        .footer {
-            background: #0f3460;
-            color: #e0e6ed;
-            text-align: center;
-            padding: 20px;
-            margin-top: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .footer p {
-            margin: 5px 0;
-        }
-
-        .ip-info {
-            color: #b8c5d6;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .ip-loading {
-            color: #667eea;
-        }
-
-        .logout-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .logout-btn:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-        }
-
-        /* 響應式設計 */
-        @media (max-width: 768px) {
-            .main-wrapper {
-                flex-direction: column;
-            }
-            
-            .sidebar1 {
-                width: 100%;
-                margin-bottom: 20px;
-            }
-            
-            .content h1 {
-                font-size: 24px;
-            }
-            
-            .logout-btn {
-                position: relative;
-                display: block;
-                width: 100%;
-                margin-bottom: 20px;
-            }
-        }
-
-        /* 動畫效果 */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .shake {
-            animation: shake 0.5s ease-in-out;
-        }
-    </style>
-</head>
 <body>
-    <!-- 密碼驗證頁面 -->
-    <div id="passwordPage" class="password-page">
-        <div class="password-container">
-            <div class="lock-icon">🔒</div>
-            <h2>請輸入密碼</h2>
-            <div class="input-group">
-                <input type="password" id="passwordInput" class="password-input" placeholder="請輸入訪問密碼" autocomplete="off" />
-            </div>
-            <button onclick="checkPassword()" class="submit-btn">進入網站</button>
-            <div id="errorMessage" class="error-message">密碼錯誤，請重新輸入</div>
-        </div>
-    </div>
 
-    <!-- 主網站內容 -->
-    <div id="mainSite" class="main-site">
-        <button onclick="logout()" class="logout-btn">登出</button>
-        
-        <div class="container">
-            <div class="header">
-            <!--    <img src="./Pictures/redcard.jpg" alt="網站標誌" width="182" height="128" style="display:block; margin: 0 auto;" />  -->
-            </div>
-            
-            <div class="main-wrapper">
-                <div class="sidebar1">
-                    <ul class="nav">
-                        <li><a href="./malware/doc_c690215acb6bdf14701c51cc1873a792.bin">Malware-doc</a></li>
-                        <li><a href="./malware/exe_httpbrowser_rat_cefb4323ba4deb9dea94dcbe3faa139f.bin">Malware-httpbrowser</a></li>
-                        <li><a href="./malware/exe_kryptik_46527d53a046ebc4e4ca08843af47a13.bin">Malware-kryptik</a></li>
-                        <li><a href="./malware/exe_zbot_2adf9f87b6eb060db57ddf1d43580c29.bin">Malware-zbot</a></li>
-                        <li><a href="./ransomware/ryuk_7665f6ee9017276dd817d15212e99ca7.bin">Ransomware-ryuk</a></li>
-                        <li><a href="./ransomware/teslacrypt_ransomware_86140b27dc6252315f48bda7acf5b180.bin">Ransomware-teslacrypt</a></li>
-                        <li><a href="./zip/eicar5.zip" download="eicar5.zip">5層ZIP</a></li>
-                        <li><a href="./zip/eicar10.zip" download="eicar10.zip">10層ZIP</a></li>
-                        <li><a href="./zip/100MB_malicious_3.rar" download="100MB_malicious_3.rar">100MB_3-rar</a></li>
-                        <li><a href="https://u.pcloud.link/publink/show?code=XZCsDA0ZJsslTm537AYYlrlMR5GXEufGPpSV" download="Malz_100MB_3.zip">Malz_100MB_3.zip</a></li>
-                        <li><a href="https://u.pcloud.link/publink/show?code=XZ1sDA0Z8qfQaw0RajjzFoY2RirwoHYzvqPy" download="pip_300MB_3.zip">300MB_3-ZIP</a></li>
-                        <li><a href="https://ztna168.github.io/mw-test/36319.exe">sandbox36319</a></li>
-                        <li><a href="./files-dl/docdl-test.docx">Office-Docx-檔案下載(400K無毒)</a></li>
-                        <li><a href="./webtest/cve-2013-1347.html" target="_blank">Browser漏洞CVE-2013-2460網頁</a></li>
-                        <li><a href="https://evil.com/vid/?id=0" target="_blank">Botnet CnC網頁</a></li>
-                        <li><a href="./webtest/poc-1.html" target="_blank">Active-X網頁</a></li>
-                        <li><a href="https://mercurteknoloji.com/in.html" target="_blank">釣魚網頁</a></li>
-                        <li><a href="https://ztna168.github.io/x-attack.html" target="_blank">網頁代碼入侵-MSDT攻擊</a></li>
-                    </ul>
-                </div>
-                
-                <div class="content">
-                    <h1>Hello here is private virus download test</h1>
-                    
-                    <div class="warning">
-                        <strong>⚠️ 重要警告：</strong>
-                        <p>請注意，這些病毒檔案，請勿在生產環境下載測試</p>
-                        <p>請在專業人員或是Pippeng陪伴下獨自測試</p>
-                    </div>
+<div class="container">
+  <div class="header"><a href="#"><img src="./Pictures/redcard.jpg" alt="在這裡插入商標" name="Insert_logo" width="182" height="128" id="Insert_logo" style="background-color: #C6D580; display:block;" /></a> 
+    <!-- end .header --></div>
+  <div class="sidebar1">
+    <ul class="nav">
+      <li><a href="./malware/doc_c690215acb6bdf14701c51cc1873a792.bin">Malware-doc</a></li>
+      <li><a href="./malware/exe_httpbrowser_rat_cefb4323ba4deb9dea94dcbe3faa139f.bin" >Malware-httpbrowser</a></li>
+      <li><a href="./malware/exe_kryptik_46527d53a046ebc4e4ca08843af47a13.bin" >Malware-kryptik</a></li>
+      <li><a href="./malware/exe_zbot_2adf9f87b6eb060db57ddf1d43580c29.bin">Malware-zbot</a></li>
+      <li><a href="./malware/a_204.zip">a_204.zip</a></li>
+      <li><a href="./malware/x-boot.zip">x-boot.zip</a></li>
+	  <li><a href="./ransomware/ryuk_7665f6ee9017276dd817d15212e99ca7.bin">Ransomware-ryuk</a></li>
+	  <li><a href="./ransomware/teslacrypt_ransomware_86140b27dc6252315f48bda7acf5b180.bin">Ransomware-teslacrypt</a></li>
+	  <li><a href="./zip/eicar_5.zip" download="eicar_5.zip">5層ZIP</a></li>
+	  <li><a href="./zip/eicar_10.zip" download="eicar_10.zip">10層ZIP</a></li>
+	  <li><a href="./zip/100MB_malicious_3.rar" download="100MB_malicious_3.rar">100MB_3-rar</a></li>
+	<!--  <li><a href="./zip/pip_300MB_3.zip" download="pip_300MB_3.zip">300MB_3-ZIP</a></li> -->
+	<!--  <li><a href="./zip/pip_300MB_4.rar" download="pip_300MB_4.rar">300MB_4-RAR</a></li> -->
+	<!--  <li><a href="./zip/Malz_100MB_3.zip">Malz_100MB_3.zip</a></li> -->
+	  <li><a href="https://ztna168.github.io/mw-test/36319.exe">sandbox36319</a></li>
+	  <li><a href="./files-dl/docdl-test.docx">Offcie-Docx-檔案下載(無毒)</a></li>
+	  <li><a href="./webtest/cve-2013-1347.html" target="_blank">Browser漏洞CVE-2013-2460網頁</a></li>
+	  <li><a href="https://evil.com/vid/?id=0" target="_blank">Bonet CnC網頁</a></li>
+	  <li><a href="./webtest/poc-1.html" target="_blank">Active-X網頁</a></li>
+	  <li><a href="https://mercurteknoloji.com/in.html" target="_blank">釣魚網頁</a></li>
+	  <li><a href="https://ztna168.github.io/x-attack.html" target="_blank">網頁代碼入侵-MSDT攻擊</a></li>
+	  <li><a href="https://example.com/option=com_payplans/group_id=123" target="_blank">網頁代碼入侵-SQLInjection</a></li>	  
+    </ul>
+    <p>&nbsp;</p>
+    <!-- end .sidebar1 --></div>
+  <div class="content">
+    <h1>Hello here is private virus download test</h1>
+    <p>請注意，這些病毒檔案，請勿在生產環境下載測試</p>
+     <p>請自行承擔病毒感染與擴散風險</p>
 
-                    <h2>使用說明</h2>
-                    <p>此網站僅供安全研究和測試用途，所有文件都應在隔離的測試環境中使用。</p>
-                    
-                    <h2>清除方法</h2>
-                    <p>啟用端點防毒軟體，定期掃描系統，確保在安全的沙盒環境中進行測試。</p>
-                    <p>請自行承擔病毒感染與擴散風險 - Test by Pippeng</p>
-					<br>
-					<p id="userIpInfo" class="ip-info ip-loading">正在檢測您的IP地址...</p>
-					<br>
-					<p>IP Check URL</p>
-					<p>https://ipapi.co</p>
-					<p>https://api.ipify.org</p>
-                </div>
-            </div>
-            
-            <div class="footer">
-                <p>請自行承擔病毒感染與擴散風險 - Test by Pippeng</p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // 設定密碼
-        const correctPassword = "pippeng!";
-        
-        // 獲取使用者IP地址
-        async function getUserIP() {
-            const ipElement = document.getElementById('userIpInfo');
-            try {
-                // 使用免費的IP檢測API
-                const response = await fetch('https://api.ipify.org?format=json');
-                const data = await response.json();
-                
-                // 獲取更詳細的IP資訊
-                const detailResponse = await fetch(`https://ipapi.co/${data.ip}/json/`);
-                const detailData = await detailResponse.json();
-                
-                // 顯示IP和地理位置資訊
-                ipElement.innerHTML = `您的IP地址：${data.ip} | 位置：${detailData.city || '未知'}, ${detailData.country_name || '未知'}`;
-                ipElement.className = 'ip-info';
-            } catch (error) {
-                console.error('獲取IP失敗:', error);
-                ipElement.innerHTML = '您的IP地址：檢測失敗';
-                ipElement.className = 'ip-info';
-            }
-        }
-        
-        // 頁面載入時檢查驗證狀態
-        window.onload = function() {
-            if (sessionStorage.getItem('authenticated') === 'true') {
-                showMainSite();
-                // 顯示主站後再獲取IP
-                setTimeout(getUserIP, 500);
-            }
-            
-            // 支援 Enter 鍵提交
-            const passwordInput = document.getElementById('passwordInput');
-            if (passwordInput) {
-                passwordInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        checkPassword();
-                    }
-                });
-                
-                // 自動聚焦到密碼輸入框
-                passwordInput.focus();
-            }
-        };
-
-        function checkPassword() {
-            const inputPassword = document.getElementById('passwordInput').value;
-            const errorMessage = document.getElementById('errorMessage');
-            const passwordInput = document.getElementById('passwordInput');
-            
-            if (inputPassword === correctPassword) {
-                // 密碼正確
-                sessionStorage.setItem('authenticated', 'true');
-                showMainSite();
-                // 顯示主站後獲取IP
-                setTimeout(getUserIP, 500);
-            } else {
-                // 密碼錯誤
-                errorMessage.style.display = 'block';
-                passwordInput.value = '';
-                passwordInput.focus();
-                
-                // 添加震動效果
-                passwordInput.classList.add('shake');
-                setTimeout(() => {
-                    passwordInput.classList.remove('shake');
-                }, 500);
-            }
-        }
-
-        function showMainSite() {
-            document.getElementById('passwordPage').style.display = 'none';
-            document.getElementById('mainSite').style.display = 'block';
-            document.body.style.background = '#1a1a2e';
-        }
-
-        function logout() {
-            if (confirm('確定要登出嗎？')) {
-                sessionStorage.removeItem('authenticated');
-                document.getElementById('passwordPage').style.display = 'flex';
-                document.getElementById('mainSite').style.display = 'none';
-                document.body.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)';
-                document.getElementById('passwordInput').focus();
-            }
-        }
-
-        // 防止透過開發者工具繞過驗證（基本保護）
-        document.addEventListener('keydown', function(e) {
-            // 禁用 F12, Ctrl+Shift+I, Ctrl+U 等
-            if (e.key === 'F12' || 
-                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                (e.ctrlKey && e.key === 'u')) {
-                e.preventDefault();
-                return false;
-            }
-        });
-
-        // 禁用右鍵選單
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-    </script>
+    <h2>清除方法</h2>
+    <p>啟用端點防毒</p>
+    <h3>&nbsp;</h3>
+    <!-- end .content --></div>
+  <div class="footer">
+    <p>請自行承擔病毒感染與擴散風險   test by Pippeng</p>
+    <!-- end .footer --></div>
+  <!-- end .container --></div>
 </body>
 </html>
