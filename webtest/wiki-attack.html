@@ -539,5 +539,10 @@ else
 var pos=document.URL.indexOf("message=")+5;
 document.write(document.URL.substring(pos,document.URL.length));
 </script>
+  // The site grabs the user's name directly from the URL hash (#)
+var username = decodeURIComponent(window.location.hash.substring(1));
+// It then puts the name directly into the page
+document.getElementById("greeting").innerHTML = "Hello, " + username;
+
 </body>
 </html>
