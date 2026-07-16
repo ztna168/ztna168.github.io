@@ -543,6 +543,16 @@ document.head.appendChild(s);
 
 // When the External Script loads successfully
 // it can access all DOM, Cookie, and Session data
-   
+<script>
+var navAgt = navigator.userAgent;
+
+if (navAgt.indexOf("MSIE")!=-1) {
+        document.write("You are using IE as a browser and visiting site: " + document.location.href + ".");
+}
+else
+{
+    document.write("You are using an unknown browser.");
+}
+</script>   
 </body>
 </html>
