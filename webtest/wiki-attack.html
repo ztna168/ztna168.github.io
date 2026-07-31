@@ -550,6 +550,10 @@ javascript://anything%0D%0A%0D%0Awindow.alert(1)
 <textarea id="comment"></textarea>
 <button onclick="postComment()">Post Comment</button>
 <div id="commentsSection"></div>
+<textarea id="comment"></textarea>
+<button onclick="postComment()">Post Comment</button>
+<div id="commentsSection"></div>
+  
 <script>   
   function postComment() {
       const comment = document.getElementById('comment').value;
@@ -564,5 +568,6 @@ javascript://anything%0D%0A%0D%0Awindow.alert(1)
      document.getElementById('commentsSection').innerHTML = comments;
  }
 </script>
+  
 </body>
 </html>
