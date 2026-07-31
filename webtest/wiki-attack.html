@@ -546,5 +546,23 @@ Using the escape character
 Using the newline and a comment //
 javascript://%0Aalert(1)
 javascript://anything%0D%0A%0D%0Awindow.alert(1)
+
+<textarea id="comment"></textarea>
+<button onclick="postComment()">Post Comment</button>
+<div id="commentsSection"></div>
+<script>   
+  function postComment() {
+      const comment = document.getElementById('comment').value;
+      // Imagine this gets stored in a database without validation.        
+      saveCommentToDB(comment)
+      document.getElementById('commentsSection').innerHTML += comment;
+   }
+
+   function loadComments() {
+     // Loads comments from db without validation
+     const comments = getCommentsFromDB();
+     document.getElementById('commentsSection').innerHTML = comments;
+ }
+</script>
 </body>
 </html>
